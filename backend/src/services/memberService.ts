@@ -1,7 +1,7 @@
 /* eslint-disable no-continue */
 
 import { SERVICE, Error400, isDomainExcluded, singleOrDefault } from '@crowd/common'
-import { LoggerBase } from '@crowd/logging'
+import { LoggerBase, logExecutionTimeV2 } from '@crowd/logging'
 import { WorkflowIdReusePolicy } from '@crowd/temporal'
 import {
   ExportableEntity,
@@ -1152,17 +1152,27 @@ export default class MemberService extends LoggerBase {
       await captureApiChange(
         this.options,
         memberMergeAction(originalId, async (captureOldState, captureNewState) => {
-          const original = await MemberRepository.findById(originalId, this.options)
-          const toMerge = await MemberRepository.findById(toMergeId, this.options)
+          const original = await logExecutionTimeV2(
+            () => MemberRepository.findById(originalId, this.options),
+            this.options.log,
+            'MemberRepository.findById(originalId, this.options)',
+          )
+
+          const toMerge = await logExecutionTimeV2(
+            () => MemberRepository.findById(toMergeId, this.options),
+            this.options.log,
+            'MemberRepository.findById(toMergeId, this.options)',
+          )
 
           captureOldState({
             primary: original,
             secondary: toMerge,
           })
 
-          const allIdentities = await MemberRepository.getIdentities(
-            [originalId, toMergeId],
-            this.options,
+          const allIdentities = await logExecutionTimeV2(
+            () => MemberRepository.getIdentities([originalId, toMergeId], this.options),
+            this.options.log,
+            'MemberRepository.getIdentities([originalId, toMergeId], this.options)',
           )
 
           const originalIdentities = allIdentities.get(originalId)
@@ -1172,28 +1182,35 @@ export default class MemberService extends LoggerBase {
             primary: {
               ...lodash.pick(original, MemberService.MEMBER_MERGE_FIELDS),
               identities: originalIdentities,
-              memberOrganizations: await MemberOrganizationRepository.findMemberRoles(
-                originalId,
-                this.options,
+              memberOrganizations: await logExecutionTimeV2(
+                () => MemberOrganizationRepository.findMemberRoles(originalId, this.options),
+                this.options.log,
+                'MemberOrganizationRepository.findMemberRoles(originalId, this.options)',
               ),
             },
             secondary: {
               ...lodash.pick(toMerge, MemberService.MEMBER_MERGE_FIELDS),
               identities: toMergeIdentities,
-              memberOrganizations: await MemberOrganizationRepository.findMemberRoles(
-                toMergeId,
-                this.options,
+              memberOrganizations: await logExecutionTimeV2(
+                () => MemberOrganizationRepository.findMemberRoles(toMergeId, this.options),
+                this.options.log,
+                'MemberOrganizationRepository.findMemberRoles(toMergeId, this.options)',
               ),
             },
           }
 
-          await MergeActionsRepository.add(
-            MergeActionType.MEMBER,
-            originalId,
-            toMergeId,
-            this.options,
-            MergeActionState.IN_PROGRESS,
-            backup,
+          await logExecutionTimeV2(
+            () =>
+              MergeActionsRepository.add(
+                MergeActionType.MEMBER,
+                originalId,
+                toMergeId,
+                this.options,
+                MergeActionState.IN_PROGRESS,
+                backup,
+              ),
+            this.options.log,
+            'MergeActionsRepository.add',
           )
 
           const repoOptions: IRepositoryOptions =
@@ -1220,21 +1237,39 @@ export default class MemberService extends LoggerBase {
             }
           }
 
-          await MemberRepository.moveIdentitiesBetweenMembers(
-            toMergeId,
-            originalId,
-            identitiesToMove,
-            identitiesToUpdate,
-            repoOptions,
+          await logExecutionTimeV2(
+            () =>
+              MemberRepository.moveIdentitiesBetweenMembers(
+                toMergeId,
+                originalId,
+                identitiesToMove,
+                identitiesToUpdate,
+                repoOptions,
+              ),
+            this.options.log,
+            'MemberRepository.moveIdentitiesBetweenMembers',
           )
           // Update notes to belong to the originalId member
-          await MemberRepository.moveNotesBetweenMembers(toMergeId, originalId, repoOptions)
+          await logExecutionTimeV2(
+            () => MemberRepository.moveNotesBetweenMembers(toMergeId, originalId, repoOptions),
+            this.options.log,
+            'MemberRepository.moveNotesBetweenMembers',
+          )
 
           // Update tasks to belong to the originalId member
-          await MemberRepository.moveTasksBetweenMembers(toMergeId, originalId, repoOptions)
+          await logExecutionTimeV2(
+            () => MemberRepository.moveTasksBetweenMembers(toMergeId, originalId, repoOptions),
+            this.options.log,
+            'MemberRepository.moveTasksBetweenMembers',
+          )
 
           // Update member affiliations
-          await MemberRepository.moveAffiliationsBetweenMembers(toMergeId, originalId, repoOptions)
+          await logExecutionTimeV2(
+            () =>
+              MemberRepository.moveAffiliationsBetweenMembers(toMergeId, originalId, repoOptions),
+            this.options.log,
+            'MemberRepository.moveAffiliationsBetweenMembers',
+          )
 
           // Get tags as array of ids (findById returns them as models)
           original.tags = original.tags.map((i) => i.get({ plain: true }).id)
@@ -1257,41 +1292,68 @@ export default class MemberService extends LoggerBase {
 
           // Update original member
           const txService = new MemberService(repoOptions as IServiceOptions)
-          await txService.update(originalId, captureNewState({ primary: toUpdate }), false)
+          await logExecutionTimeV2(
+            () => txService.update(originalId, captureNewState({ primary: toUpdate }), false),
+            this.options.log,
+            'MemberService.update(originalId, ...)',
+          )
 
           // update members that belong to source organization to destination org
           const memberOrganizationService = new MemberOrganizationService(repoOptions)
-          await memberOrganizationService.moveOrgsBetweenMembers(originalId, toMergeId)
-
-          // Remove toMerge from original member
-          await MemberRepository.removeToMerge(originalId, toMergeId, repoOptions)
-
-          const secondMemberSegments = await MemberRepository.getMemberSegments(
-            toMergeId,
-            repoOptions,
+          await logExecutionTimeV2(
+            () => memberOrganizationService.moveOrgsBetweenMembers(originalId, toMergeId),
+            this.options.log,
+            'memberOrganizationService.moveOrgsBetweenMembers',
           )
 
-          await MemberRepository.includeMemberToSegments(toMergeId, {
-            ...repoOptions,
-            currentSegments: secondMemberSegments,
-          })
+          // Remove toMerge from original member
+          await logExecutionTimeV2(
+            () => MemberRepository.removeToMerge(originalId, toMergeId, repoOptions),
+            this.options.log,
+            'MemberRepository.removeToMerge',
+          )
 
-          await SequelizeRepository.commitTransaction(tx)
+          const secondMemberSegments = await logExecutionTimeV2(
+            () => MemberRepository.getMemberSegments(toMergeId, repoOptions),
+            this.options.log,
+            'MemberRepository.getMemberSegments',
+          )
+
+          await logExecutionTimeV2(
+            () =>
+              MemberRepository.includeMemberToSegments(toMergeId, {
+                ...repoOptions,
+                currentSegments: secondMemberSegments,
+              }),
+            this.options.log,
+            'MemberRepository.includeMemberToSegments',
+          )
+
+          await logExecutionTimeV2(
+            () => SequelizeRepository.commitTransaction(tx),
+            this.options.log,
+            'SequelizeRepository.commitTransaction',
+          )
           return null
         }),
       )
 
-      await this.options.temporal.workflow.start('finishMemberMerging', {
-        taskQueue: 'entity-merging',
-        workflowId: `finishMemberMerging/${originalId}/${toMergeId}`,
-        retry: {
-          maximumAttempts: 10,
-        },
-        args: [originalId, toMergeId, this.options.currentTenant.id],
-        searchAttributes: {
-          TenantId: [this.options.currentTenant.id],
-        },
-      })
+      await logExecutionTimeV2(
+        () =>
+          this.options.temporal.workflow.start('finishMemberMerging', {
+            taskQueue: 'entity-merging',
+            workflowId: `finishMemberMerging/${originalId}/${toMergeId}`,
+            retry: {
+              maximumAttempts: 10,
+            },
+            args: [originalId, toMergeId, this.options.currentTenant.id],
+            searchAttributes: {
+              TenantId: [this.options.currentTenant.id],
+            },
+          }),
+        this.options.log,
+        'this.options.temporal.workflow.start',
+      )
 
       if (syncOptions.doSync) {
         let attempts = 0
@@ -1299,8 +1361,17 @@ export default class MemberService extends LoggerBase {
         while (attempts < maxAttempts) {
           try {
             const searchSyncService = new SearchSyncService(this.options, syncOptions.mode)
-            await searchSyncService.triggerMemberSync(this.options.currentTenant.id, originalId)
-            await searchSyncService.triggerRemoveMember(this.options.currentTenant.id, toMergeId)
+            await logExecutionTimeV2(
+              () => searchSyncService.triggerMemberSync(this.options.currentTenant.id, originalId),
+              this.options.log,
+              'searchSyncService.triggerMemberSync(originalId)',
+            )
+            await logExecutionTimeV2(
+              () => searchSyncService.triggerRemoveMember(this.options.currentTenant.id, toMergeId),
+              this.options.log,
+              'searchSyncService.triggerRemoveMember(toMergeId)',
+            )
+
             break
           } catch (emitError) {
             attempts++
