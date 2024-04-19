@@ -62,6 +62,7 @@ import {
   IMemberMergeSuggestion,
   mapUsernameToIdentities,
 } from './types/memberTypes'
+import { logExecutionTimeV2 } from '@crowd/logging'
 
 const { Op } = Sequelize
 
@@ -731,13 +732,18 @@ class MemberRepository {
     const record = await captureApiChange(
       options,
       memberEditProfileAction(id, async (captureOldState, captureNewState) => {
-        const record = await options.database.member.findOne({
-          where: {
-            id,
-            tenantId: currentTenant.id,
-          },
-          transaction,
-        })
+        const record: any = await logExecutionTimeV2(
+          () =>
+            options.database.member.findOne({
+              where: {
+                id,
+                tenantId: currentTenant.id,
+              },
+              transaction,
+            }),
+          options.log,
+          'options.database.member.findOne',
+        )
 
         captureOldState(record.get({ plain: true }))
 
@@ -822,12 +828,17 @@ class MemberRepository {
           manuallyChangedFields: data.manuallyChangedFields,
         }
 
-        await options.database.member.update(captureNewState(updatedMember), {
-          where: {
-            id: record.id,
-          },
-          transaction,
-        })
+        await logExecutionTimeV2(
+          () =>
+            options.database.member.update(captureNewState(updatedMember), {
+              where: {
+                id: record.id,
+              },
+              transaction,
+            }),
+          options.log,
+          'options.database.member.update',
+        )
 
         return record
       }),
@@ -835,61 +846,106 @@ class MemberRepository {
     )
 
     if (data.activities) {
-      await record.setActivities(data.activities || [], {
-        transaction,
-      })
+      await logExecutionTimeV2(
+        () =>
+          record.setActivities(data.activities || [], {
+            transaction,
+          }),
+        options.log,
+        'record.setActivities',
+      )
     }
 
     if (data.tags) {
-      await record.setTags(data.tags || [], {
-        transaction,
-      })
+      await logExecutionTimeV2(
+        () =>
+          record.setTags(data.tags || [], {
+            transaction,
+          }),
+        options.log,
+        'record.setTags',
+      )
     }
 
     if (data.tasks) {
-      await record.setTasks(data.tasks || [], {
-        transaction,
-      })
+      await logExecutionTimeV2(
+        () =>
+          record.setTasks(data.tasks || [], {
+            transaction,
+          }),
+        options.log,
+        'record.setTasks',
+      )
     }
 
     if (data.notes) {
-      await record.setNotes(data.notes || [], {
-        transaction,
-      })
+      await logExecutionTimeV2(
+        () =>
+          record.setNotes(data.notes || [], {
+            transaction,
+          }),
+        options.log,
+        'record.setNotes',
+      )
     }
 
-    await MemberRepository.updateMemberOrganizations(
-      record,
-      data.organizations,
-      data.organizationsReplace,
-      options,
+    await logExecutionTimeV2(
+      () =>
+        MemberRepository.updateMemberOrganizations(
+          record,
+          data.organizations,
+          data.organizationsReplace,
+          options,
+        ),
+      options.log,
+      'MemberRepository.updateMemberOrganizations',
     )
 
     if (data.noMerge) {
-      await record.setNoMerge(data.noMerge || [], {
-        transaction,
-      })
+      await logExecutionTimeV2(
+        () =>
+          record.setNoMerge(data.noMerge || [], {
+            transaction,
+          }),
+        options.log,
+        'record.setNoMerge',
+      )
     }
 
     if (data.toMerge) {
-      await record.setToMerge(data.toMerge || [], {
-        transaction,
-      })
+      await logExecutionTimeV2(
+        () =>
+          record.setToMerge(data.toMerge || [], {
+            transaction,
+          }),
+        options.log,
+        'record.setToMerge',
+      )
     }
 
     if (data.affiliations) {
-      await MemberRepository.setAffiliations(id, data.affiliations, options)
+      await logExecutionTimeV2(
+        () => MemberRepository.setAffiliations(id, data.affiliations, options),
+        options.log,
+        'MemberRepository.setAffiliations',
+      )
     }
 
     if (options.currentSegments && options.currentSegments.length > 0) {
-      await MemberRepository.includeMemberToSegments(record.id, options)
+      await logExecutionTimeV2(
+        () => MemberRepository.includeMemberToSegments(record.id, options),
+        options.log,
+        'MemberRepository.includeMemberToSegments',
+      )
     }
 
     // Before upserting identities, check if they already exist
     const checkIdentities = [...(data.identitiesToCreate || []), ...(data.identitiesToUpdate || [])]
-    if (checkIdentities.length > 0) {
-      for (const i of checkIdentities) {
-        const query = `
+    await logExecutionTimeV2(
+      async () => {
+        if (checkIdentities.length > 0) {
+          for (const i of checkIdentities) {
+            const query = `
           select "memberId"
           from "memberIdentities"
           where "platform" = :platform and
@@ -898,35 +954,47 @@ class MemberRepository {
                 "tenantId" = :tenantId
         `
 
-        const data: IMemberIdentity[] = await seq.query(query, {
-          replacements: {
-            platform: i.platform,
-            value: i.value,
-            type: i.type || MemberIdentityType.USERNAME,
-            tenantId: currentTenant.id,
-          },
-          type: QueryTypes.SELECT,
-          transaction,
-        })
+            const data: IMemberIdentity[] = await logExecutionTimeV2(
+              () =>
+                seq.query(query, {
+                  replacements: {
+                    platform: i.platform,
+                    value: i.value,
+                    type: i.type || MemberIdentityType.USERNAME,
+                    tenantId: currentTenant.id,
+                  },
+                  type: QueryTypes.SELECT,
+                  transaction,
+                }),
+              options.log,
+              'seq.query - get identities',
+            )
 
-        if (data.length > 0 && data[0].memberId !== record.id) {
-          const memberSegment = (await seq.query(
-            `
+            if (data.length > 0 && data[0].memberId !== record.id) {
+              const memberSegment = (await logExecutionTimeV2(
+                () =>
+                  seq.query(
+                    `
             select distinct a."segmentId", a."memberId"
         from activities a where a."memberId" = :memberId
         limit 1
           `,
-            {
-              replacements: {
-                memberId: data[0].memberId,
-              },
-              type: QueryTypes.SELECT,
-              transaction,
-            },
-          )) as any[]
+                    {
+                      replacements: {
+                        memberId: data[0].memberId,
+                      },
+                      type: QueryTypes.SELECT,
+                      transaction,
+                    },
+                  ),
+                options.log,
+                'seq.query - get member segment',
+              )) as any[]
 
-          const segmentInfo = (await seq.query(
-            `
+              const segmentInfo = (await logExecutionTimeV2(
+                () =>
+                  seq.query(
+                    `
           select s.id, pd.id as "parentId", gpd.id as "grandParentId"
           from segments s
                   inner join segments pd
@@ -936,124 +1004,189 @@ class MemberRepository {
                                               gpd."grandparentSlug" is null and gpd."parentSlug" is null
           where s.id = :segmentId;
           `,
-            {
-              replacements: {
-                segmentId: memberSegment[0].segmentId,
-              },
-              type: QueryTypes.SELECT,
-              transaction,
-            },
-          )) as any[]
+                    {
+                      replacements: {
+                        segmentId: memberSegment[0].segmentId,
+                      },
+                      type: QueryTypes.SELECT,
+                      transaction,
+                    },
+                  ),
+                options.log,
+                'seq.query - get segment info',
+              )) as any[]
 
-          throw new Error409(
-            options.language,
-            'errors.alreadyExists',
-            // @ts-ignore
-            JSON.stringify({
-              memberId: data[0].memberId,
-              grandParentId: segmentInfo[0].grandParentId,
-            }),
-          )
-        }
-      }
-    }
-
-    const qx = SequelizeRepository.getQueryExecutor(options, transaction)
-
-    if (data.identitiesToCreate && data.identitiesToCreate.length > 0) {
-      for (const i of data.identitiesToCreate) {
-        await createMemberIdentity(qx, {
-          memberId: record.id,
-          platform: i.platform,
-          value: i.value,
-          type: i.type ? i.type : MemberIdentityType.USERNAME,
-          sourceId: i.sourceId || null,
-          integrationId: i.integrationId || null,
-          tenantId: currentTenant.id,
-          verified: i.verified !== undefined ? i.verified : !!manualChange,
-        })
-      }
-    }
-
-    if (data.identitiesToUpdate && data.identitiesToUpdate.length > 0) {
-      for (const i of data.identitiesToUpdate) {
-        await updateVerifiedFlag(qx, {
-          memberId: record.id,
-          platform: i.platform,
-          value: i.value,
-          type: i.type ? i.type : MemberIdentityType.USERNAME,
-          tenantId: currentTenant.id,
-          verified: i.verified !== undefined ? i.verified : !!manualChange,
-        })
-      }
-    }
-
-    if (data.identitiesToDelete && data.identitiesToDelete.length > 0) {
-      for (const i of data.identitiesToDelete) {
-        await deleteMemberIdentities(qx, {
-          memberId: record.id,
-          platform: i.platform,
-          value: i.value,
-          type: i.type ? i.type : MemberIdentityType.USERNAME,
-        })
-      }
-    }
-
-    if (data.username) {
-      data.username = mapUsernameToIdentities(data.username)
-
-      const platforms = Object.keys(data.username) as PlatformType[]
-      if (platforms.length > 0) {
-        const platformsToDelete: string[] = []
-        const valuesToDelete: string[] = []
-        const typesToDelete: MemberIdentityType[] = []
-
-        for (const platform of platforms) {
-          const identities = data.username[platform]
-
-          for (const identity of identities) {
-            if (identity.delete) {
-              platformsToDelete.push(identity.platform)
-              if (identity.value) {
-                valuesToDelete.push(identity.value)
-                typesToDelete.push(identity.type)
-              } else {
-                valuesToDelete.push(identity.username)
-                typesToDelete.push(MemberIdentityType.USERNAME)
-              }
-            } else if (
-              (identity.username && identity.username !== '') ||
-              (identity.value && identity.value !== '')
-            ) {
-              await createMemberIdentity(qx, {
-                memberId: record.id,
-                platform,
-                value: identity.value ? identity.value : identity.username,
-                type: identity.type ? identity.type : MemberIdentityType.USERNAME,
-                sourceId: identity.sourceId || null,
-                integrationId: identity.integrationId || null,
-                tenantId: currentTenant.id,
-                verified: identity.verified !== undefined ? identity.verified : !!manualChange,
-              })
+              throw new Error409(
+                options.language,
+                'errors.alreadyExists',
+                // @ts-ignore
+                JSON.stringify({
+                  memberId: data[0].memberId,
+                  grandParentId: segmentInfo[0].grandParentId,
+                }),
+              )
             }
           }
         }
+      },
+      options.log,
+      'check identities',
+    )
 
-        if (platformsToDelete.length > 0) {
-          await deleteMemberIdentitiesByCombinations(qx, {
-            tenantId: currentTenant.id,
-            memberId: record.id,
-            platforms: platformsToDelete,
-            values: valuesToDelete,
-            types: typesToDelete,
-          })
+    const qx = SequelizeRepository.getQueryExecutor(options, transaction)
+
+    await logExecutionTimeV2(
+      async () => {
+        if (data.identitiesToCreate && data.identitiesToCreate.length > 0) {
+          for (const i of data.identitiesToCreate) {
+            await logExecutionTimeV2(
+              () =>
+                createMemberIdentity(qx, {
+                  memberId: record.id,
+                  platform: i.platform,
+                  value: i.value,
+                  type: i.type ? i.type : MemberIdentityType.USERNAME,
+                  sourceId: i.sourceId || null,
+                  integrationId: i.integrationId || null,
+                  tenantId: currentTenant.id,
+                  verified: i.verified !== undefined ? i.verified : !!manualChange,
+                }),
+              options.log,
+              'create identitiy',
+            )
+          }
         }
-      }
-    }
+      },
+      options.log,
+      'create identities',
+    )
 
-    await this._createAuditLog(AuditLogRepository.UPDATE, record, data, options)
+    await logExecutionTimeV2(
+      async () => {
+        if (data.identitiesToUpdate && data.identitiesToUpdate.length > 0) {
+          for (const i of data.identitiesToUpdate) {
+            await logExecutionTimeV2(
+              () =>
+                updateVerifiedFlag(qx, {
+                  memberId: record.id,
+                  platform: i.platform,
+                  value: i.value,
+                  type: i.type ? i.type : MemberIdentityType.USERNAME,
+                  tenantId: currentTenant.id,
+                  verified: i.verified !== undefined ? i.verified : !!manualChange,
+                }),
+              options.log,
+              'update verified flag',
+            )
+          }
+        }
+      },
+      options.log,
+      'update verified flags',
+    )
 
-    return this.findById(record.id, options, true, doPopulateRelations)
+    await logExecutionTimeV2(
+      async () => {
+        if (data.identitiesToDelete && data.identitiesToDelete.length > 0) {
+          for (const i of data.identitiesToDelete) {
+            await logExecutionTimeV2(
+              () =>
+                deleteMemberIdentities(qx, {
+                  memberId: record.id,
+                  platform: i.platform,
+                  value: i.value,
+                  type: i.type ? i.type : MemberIdentityType.USERNAME,
+                }),
+              options.log,
+              'delete identity',
+            )
+          }
+        }
+      },
+      options.log,
+      'delete identities',
+    )
+
+    await logExecutionTimeV2(
+      async () => {
+        if (data.username) {
+          data.username = mapUsernameToIdentities(data.username)
+
+          const platforms = Object.keys(data.username) as PlatformType[]
+          if (platforms.length > 0) {
+            const platformsToDelete: string[] = []
+            const valuesToDelete: string[] = []
+            const typesToDelete: MemberIdentityType[] = []
+
+            for (const platform of platforms) {
+              const identities = data.username[platform]
+
+              for (const identity of identities) {
+                if (identity.delete) {
+                  platformsToDelete.push(identity.platform)
+                  if (identity.value) {
+                    valuesToDelete.push(identity.value)
+                    typesToDelete.push(identity.type)
+                  } else {
+                    valuesToDelete.push(identity.username)
+                    typesToDelete.push(MemberIdentityType.USERNAME)
+                  }
+                } else if (
+                  (identity.username && identity.username !== '') ||
+                  (identity.value && identity.value !== '')
+                ) {
+                  await logExecutionTimeV2(
+                    () =>
+                      createMemberIdentity(qx, {
+                        memberId: record.id,
+                        platform,
+                        value: identity.value ? identity.value : identity.username,
+                        type: identity.type ? identity.type : MemberIdentityType.USERNAME,
+                        sourceId: identity.sourceId || null,
+                        integrationId: identity.integrationId || null,
+                        tenantId: currentTenant.id,
+                        verified:
+                          identity.verified !== undefined ? identity.verified : !!manualChange,
+                      }),
+                    options.log,
+                    'create username identity',
+                  )
+                }
+              }
+            }
+
+            if (platformsToDelete.length > 0) {
+              await logExecutionTimeV2(
+                () =>
+                  deleteMemberIdentitiesByCombinations(qx, {
+                    tenantId: currentTenant.id,
+                    memberId: record.id,
+                    platforms: platformsToDelete,
+                    values: valuesToDelete,
+                    types: typesToDelete,
+                  }),
+                options.log,
+                'delete username identities',
+              )
+            }
+          }
+        }
+      },
+      options.log,
+      'create username identities',
+    )
+
+    await logExecutionTimeV2(
+      () => this._createAuditLog(AuditLogRepository.UPDATE, record, data, options),
+      options.log,
+      'create audit log',
+    )
+
+    return logExecutionTimeV2(
+      () => this.findById(record.id, options, true, doPopulateRelations),
+      options.log,
+      'find by id',
+    )
   }
 
   static async destroy(id, options: IRepositoryOptions, force = false) {
@@ -1286,7 +1419,7 @@ class MemberRepository {
              "integrationId",
              "createdAt",
              "updatedAt"
-      from "memberIdentities" 
+      from "memberIdentities"
       where "memberId" in (:memberIds)
       order by "createdAt" asc;
     `
