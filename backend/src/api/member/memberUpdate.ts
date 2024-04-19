@@ -1,4 +1,5 @@
 import lodash from 'lodash'
+import { logExecutionTimeV2 } from '@crowd/logging'
 import Permissions from '../../security/permissions'
 import track from '../../segment/track'
 import MemberService from '../../services/memberService'
@@ -23,8 +24,16 @@ import PermissionChecker from '../../services/user/permissionChecker'
 export default async (req, res) => {
   new PermissionChecker(req).validateHas(Permissions.values.memberEdit)
 
-  const member = await new MemberService(req).findById(req.params.id)
-  const payload = await new MemberService(req).update(req.params.id, req.body, true, true)
+  const member = await logExecutionTimeV2(
+    () => new MemberService(req).findById(req.params.id),
+    req.log,
+    'new MemberService(req).findById(req.params.id)',
+  )
+  const payload = await logExecutionTimeV2(
+    () => new MemberService(req).update(req.params.id, req.body, true, true),
+    req.log,
+    'new MemberService(req).update(req.params.id, req.body, true, true)',
+  )
 
   const differentTagIds = lodash.difference(
     payload.tags.map((t) => t.id),

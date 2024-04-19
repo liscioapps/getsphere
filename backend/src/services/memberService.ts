@@ -1600,21 +1600,39 @@ export default class MemberService extends LoggerBase {
       transaction = repoOptions.transaction
 
       if (data.activities) {
-        data.activities = await ActivityRepository.filterIdsInTenant(data.activities, repoOptions)
+        data.activities = await logExecutionTimeV2(
+          () => ActivityRepository.filterIdsInTenant(data.activities, repoOptions),
+          this.options.log,
+          'ActivityRepository.filterIdsInTenant(data.activities, repoOptions)',
+        )
       }
       if (data.tags) {
-        data.tags = await TagRepository.filterIdsInTenant(data.tags, repoOptions)
+        data.tags = await logExecutionTimeV2(
+          () => TagRepository.filterIdsInTenant(data.tags, repoOptions),
+          this.options.log,
+          'TagRepository.filterIdsInTenant(data.tags, repoOptions)',
+        )
       }
       if (data.noMerge) {
-        data.noMerge = await MemberRepository.filterIdsInTenant(
-          data.noMerge.filter((i) => i !== id),
-          repoOptions,
+        data.noMerge = await logExecutionTimeV2(
+          () =>
+            MemberRepository.filterIdsInTenant(
+              data.noMerge.filter((i) => i !== id),
+              repoOptions,
+            ),
+          this.options.log,
+          'MemberRepository.filterIdsInTenant(data.noMerge.filter((i) => i !== id), repoOptions)',
         )
       }
       if (data.toMerge) {
-        data.toMerge = await MemberRepository.filterIdsInTenant(
-          data.toMerge.filter((i) => i !== id),
-          repoOptions,
+        data.toMerge = await logExecutionTimeV2(
+          () =>
+            MemberRepository.filterIdsInTenant(
+              data.toMerge.filter((i) => i !== id),
+              repoOptions,
+            ),
+          this.options.log,
+          'MemberRepository.filterIdsInTenant(data.toMerge.filter((i) => i !== id), repoOptions)',
         )
       }
 
@@ -1624,7 +1642,11 @@ export default class MemberService extends LoggerBase {
           if (data.identities) {
             const incomingIdentities = data.identities as IMemberIdentity[]
             const existingIdentities = (
-              await MemberRepository.getIdentities([id], repoOptions)
+              await logExecutionTimeV2(
+                () => MemberRepository.getIdentities([id], repoOptions),
+                this.options.log,
+                'MemberRepository.getIdentities([id], repoOptions)',
+              )
             ).get(id)
 
             captureOldState(lodash.sortBy(existingIdentities, [(i) => i.platform, (i) => i.type]))
@@ -1666,7 +1688,13 @@ export default class MemberService extends LoggerBase {
             data.identitiesToDelete = toDelete
           } else if (data.username) {
             // need to filter out existing identities from the payload
-            const existingIdentities = (await MemberRepository.getIdentities([id], repoOptions))
+            const existingIdentities = (
+              await logExecutionTimeV2(
+                () => MemberRepository.getIdentities([id], repoOptions),
+                this.options.log,
+                'MemberRepository.getIdentities([id], repoOptions)',
+              )
+            )
               .get(id)
               .filter((i) => i.type === MemberIdentityType.USERNAME)
 
@@ -1733,7 +1761,11 @@ export default class MemberService extends LoggerBase {
             )
           }
 
-          const record = await MemberRepository.update(id, data, repoOptions, true, manualChange)
+          const record = await logExecutionTimeV2(
+            () => MemberRepository.update(id, data, repoOptions, true, manualChange),
+            this.options.log,
+            'MemberRepository.update(id, data, repoOptions, true, manualChange)',
+          )
 
           return record
         }),
