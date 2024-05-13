@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: automations-worker
-          image: liscioapps/sphere-automations-worker:1714504030.d322b634
+          image: liscioapps/sphere-automations-worker:1715622906.c579382f
           workingDir: /usr/crowd/app/services/apps/automations_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
         - name: cache-worker
-          image: liscioapps/sphere-cache-worker:1715611356.a54b7ca8
+          image: liscioapps/sphere-cache-worker:1715622977.c579382f
           workingDir: /usr/crowd/app/services/apps/cache_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -75,7 +75,7 @@ spec:
     spec:
       containers:
         - name: data-sink-worker-normal
-          image: liscioapps/sphere-data-sink-worker:1714511473.2d0ae48d
+          image: liscioapps/sphere-data-sink-worker:1715623053.c579382f
           workingDir: /usr/crowd/app/services/apps/data_sink_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -108,7 +108,7 @@ spec:
     spec:
       containers:
         - name: data-sink-worker-system
-          image: liscioapps/sphere-data-sink-worker:1714511473.2d0ae48d
+          image: liscioapps/sphere-data-sink-worker:1715623053.c579382f
           workingDir: /usr/crowd/app/services/apps/data_sink_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -141,7 +141,7 @@ spec:
     spec:
       containers:
         - name: data-sink-worker-high
-          image: liscioapps/sphere-data-sink-worker:1714511473.2d0ae48d
+          image: liscioapps/sphere-data-sink-worker:1715623053.c579382f
           workingDir: /usr/crowd/app/services/apps/data_sink_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -174,7 +174,7 @@ spec:
     spec:
       containers:
         - name: data-sink-worker-urgent
-          image: liscioapps/sphere-data-sink-worker:1714511473.2d0ae48d
+          image: liscioapps/sphere-data-sink-worker:1715623053.c579382f
           workingDir: /usr/crowd/app/services/apps/data_sink_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -234,7 +234,7 @@ spec:
     spec:
       containers:
         - name: entity-merging-worker
-          image: liscioapps/sphere-entity-merging-worker:1714524331.2d0ae48d
+          image: liscioapps/sphere-entity-merging-worker:1715623085.c579382f
           workingDir: /usr/crowd/app/services/apps/entity_merging_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -294,7 +294,7 @@ spec:
     spec:
       containers:
         - name: integration-run-worker-normal
-          image: liscioapps/sphere-integration-run-worker:1714647258.7352cf6f
+          image: liscioapps/sphere-integration-run-worker:1715623130.c579382f
           workingDir: /usr/crowd/app/services/apps/integration_run_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -326,7 +326,7 @@ spec:
     spec:
       containers:
         - name: integration-run-worker-system
-          image: liscioapps/sphere-integration-run-worker:1714647258.7352cf6f
+          image: liscioapps/sphere-integration-run-worker:1715623130.c579382f
           workingDir: /usr/crowd/app/services/apps/integration_run_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -359,7 +359,7 @@ spec:
     spec:
       containers:
         - name: integration-run-worker-high
-          image: liscioapps/sphere-integration-run-worker:1714647258.7352cf6f
+          image: liscioapps/sphere-integration-run-worker:1715623130.c579382f
           workingDir: /usr/crowd/app/services/apps/integration_run_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -392,7 +392,7 @@ spec:
     spec:
       containers:
         - name: integration-run-worker-urgent
-          image: liscioapps/sphere-integration-run-worker:1714647258.7352cf6f
+          image: liscioapps/sphere-integration-run-worker:1715623130.c579382f
           workingDir: /usr/crowd/app/services/apps/integration_run_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -425,7 +425,7 @@ spec:
     spec:
       containers:
         - name: integration-stream-worker-normal
-          image: liscioapps/sphere-integration-stream-worker:1714757978.e2fe998d
+          image: liscioapps/sphere-integration-stream-worker:1715623149.c579382f
           workingDir: /usr/crowd/app/services/apps/integration_stream_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -459,7 +459,7 @@ spec:
     spec:
       containers:
         - name: integration-stream-worker-system
-          image: liscioapps/sphere-integration-stream-worker:1714757978.e2fe998d
+          image: liscioapps/sphere-integration-stream-worker:1715623149.c579382f
           workingDir: /usr/crowd/app/services/apps/integration_stream_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -493,7 +493,7 @@ spec:
     spec:
       containers:
         - name: integration-stream-worker-high
-          image: liscioapps/sphere-integration-stream-worker:1714757978.e2fe998d
+          image: liscioapps/sphere-integration-stream-worker:1715623149.c579382f
           workingDir: /usr/crowd/app/services/apps/integration_stream_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -526,7 +526,7 @@ spec:
     spec:
       containers:
         - name: integration-stream-worker-urgent
-          image: liscioapps/sphere-integration-stream-worker:1714757978.e2fe998d
+          image: liscioapps/sphere-integration-stream-worker:1715623149.c579382f
           workingDir: /usr/crowd/app/services/apps/integration_stream_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -560,7 +560,7 @@ spec:
     spec:
       containers:
         - name: integration-sync-worker-normal
-          image: liscioapps/sphere-integration-sync-worker:1714525295.2d0ae48d
+          image: liscioapps/sphere-integration-sync-worker:1715623181.c579382f
           workingDir: /usr/crowd/app/services/apps/integration_sync_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -593,7 +593,7 @@ spec:
     spec:
       containers:
         - name: integration-sync-worker-system
-          image: liscioapps/sphere-integration-sync-worker:1714525295.2d0ae48d
+          image: liscioapps/sphere-integration-sync-worker:1715623181.c579382f
           workingDir: /usr/crowd/app/services/apps/integration_sync_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -626,7 +626,7 @@ spec:
     spec:
       containers:
         - name: integration-sync-worker-high
-          image: liscioapps/sphere-integration-sync-worker:1714525295.2d0ae48d
+          image: liscioapps/sphere-integration-sync-worker:1715623181.c579382f
           workingDir: /usr/crowd/app/services/apps/integration_sync_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -660,7 +660,7 @@ spec:
     spec:
       containers:
         - name: integration-sync-worker-urgent
-          image: liscioapps/sphere-integration-sync-worker:1714525295.2d0ae48d
+          image: liscioapps/sphere-integration-sync-worker:1715623181.c579382f
           workingDir: /usr/crowd/app/services/apps/integration_sync_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -691,7 +691,7 @@ spec:
     spec:
       containers:
         - name: merge-suggestions-worker
-          image: liscioapps/sphere-merge-suggestions-worker:1714527620.0b14e1b4
+          image: liscioapps/sphere-merge-suggestions-worker:1715623203.c579382f
           workingDir: /usr/crowd/app/services/apps/merge_suggestions_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -720,7 +720,7 @@ spec:
     spec:
       containers:
         - name: profiles-worker
-          image: liscioapps/sphere-profiles-worker:1715611279.a54b7ca8
+          image: liscioapps/sphere-profiles-worker:1715623357.c579382f
           workingDir: /usr/crowd/app/services/apps/profiles_worker
           command: ['pnpm']
           args: ['run', 'start']

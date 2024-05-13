@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: search-sync-api
-          image: liscioapps/sphere-search-sync-api:1715325650.eece5234
+          image: liscioapps/sphere-search-sync-api:1715622330.c293274b
           workingDir: /usr/crowd/app/services/apps/search_sync_api
           command: ["pnpm"]
           args: ["run", "start"]

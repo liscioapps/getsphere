@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: python-worker
-          image: liscioapps/sphere-python-worker:1714489062.cdb94b3b
+          image: liscioapps/sphere-python-worker:1715622201.c293274b
           envFrom:
             - configMapRef:
                 name: backend-config
