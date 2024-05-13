@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
         - name: cache-worker
-          image: liscioapps/sphere-cache-worker:1714511229.2d0ae48d
+          image: liscioapps/sphere-cache-worker:1715611356.a54b7ca8
           workingDir: /usr/crowd/app/services/apps/cache_worker
           command: ['pnpm']
           args: ['run', 'start']
@@ -720,7 +720,7 @@ spec:
     spec:
       containers:
         - name: profiles-worker
-          image: liscioapps/sphere-profiles-worker:1714527896.0b14e1b4
+          image: liscioapps/sphere-profiles-worker:1715611279.a54b7ca8
           workingDir: /usr/crowd/app/services/apps/profiles_worker
           command: ['pnpm']
           args: ['run', 'start']

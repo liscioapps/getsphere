@@ -173,6 +173,7 @@ export class ServiceWorker extends Service {
           user: process.env['CROWD_DB_USERNAME'],
           password: process.env['CROWD_DB_PASSWORD'],
           database: process.env['CROWD_DB_DATABASE'],
+          ssl: process.env['CROWD_DB_SSL'],
         })
 
         this._postgresReader = new DbStore(this.log, dbConnection)
@@ -187,6 +188,7 @@ export class ServiceWorker extends Service {
           user: process.env['CROWD_DB_USERNAME'],
           password: process.env['CROWD_DB_PASSWORD'],
           database: process.env['CROWD_DB_DATABASE'],
+          ssl: process.env['CROWD_DB_SSL'],
         })
 
         this._postgresWriter = new DbStore(this.log, dbConnection)

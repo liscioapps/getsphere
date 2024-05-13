@@ -18,6 +18,7 @@ spec:
     - hosts:
         - app.getsphere.dev
         - nango.getsphere.dev
+        - cjs.getsphere.dev
       secretName: letsencrypt-issuer
   rules:
     - host: app.getsphere.dev
@@ -75,6 +76,16 @@ spec:
                 name: nango-svc
                 port:
                   number: 3003
+    - host: cjs.getsphere.dev
+      http:
+        paths:
+          - path: /()(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: cubejs-svc
+                port:
+                  number: 4000
 
 ---
 apiVersion: networking.k8s.io/v1

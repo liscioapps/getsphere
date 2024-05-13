@@ -153,13 +153,8 @@ export async function getAllTenants(db: DbStore): Promise<ITenant[]> {
   let rows: ITenant[] = []
   try {
     rows = await db.connection().query(`
-      select 
-        id as "tenantId", 
-        plan
-      from tenants
-      where "deletedAt" is null
-        and plan IN ('Scale', 'Growth', 'Essential', 'Enterprise')
-        and ("trialEndsAt" > NOW() or "trialEndsAt" is null);
+      SELECT id as "tenantId", plan
+      FROM tenants WHERE "deletedAt" IS NULL;
     `)
   } catch (err) {
     this.log.error('Error while getting all tenants', err)
