@@ -1,7 +1,7 @@
 <p align="center">
   <a href="https://github.com/liscioapps/getsphere">  </a>
 
-  <img src="https://getsphere.dev/img/main_wordmark.png" alt="Sphere icon" width="120px">
+  <img src="https://getsphere.dev/img/main_wordmark.png" alt="Sphere icon">
 
 
   <h2 align="center">Effortlessly centralize community, product, and customer data</h2>
