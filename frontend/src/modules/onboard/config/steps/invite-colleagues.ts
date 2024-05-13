@@ -72,7 +72,7 @@ const inviteColleagues: OnboardStepConfig = {
       })
       // Redirect to Book a demo page
       .then(() => {
-        router.push('/onboard/demo');
+        router.push({ name: 'welcomeaboard' });
 
         return Promise.resolve();
       });

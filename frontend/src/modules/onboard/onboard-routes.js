@@ -21,15 +21,6 @@ export default [
     },
   },
   {
-    name: 'onboardDemo',
-    path: '/onboard/demo',
-    component: OnboardBookADemoPage,
-    meta: {
-      auth: true,
-      title: 'Onboarding',
-    },
-  },
-  {
     name: 'onboardPlans',
     path: '/onboard/plans',
     component: OnboardPlansPage,
