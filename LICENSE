@@ -1,3 +1,9 @@
+Copyright (c) 2024-present Liscio Apps, LLC
+
+GetSphere is a community fork of the CrowdDotDev program from Crowd Technologies GmbH. Our goal is to provide a fully Apache 2.0 licensed, fully open source version of the CrowdDotDev platform. To achomplish this, this Pull Request removes all `premium` folders from the project: https://github.com/liscioapps/getsphere/pull/4.
+
+However, we also are leaving the original copyright notice, "PREMIUM LICENSE," and license details below. As with the softare itself, this LICENSE is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
 Copyright (c) 2022-present Crowd Technologies GmbH
 
 Parts of this software are licensed as follows:
