@@ -63,7 +63,6 @@ Sphere is open-source, built with developers in mind, available for both hosted 
 - **User enrichment** with 25+ attributes, including emails, social profiles, work experience, and technical skills. [cloud only]
 - **Organization enrichment** with 50+ attributes, including industry, headcount, and revenue. [cloud only]
 - **Sentiment analysis and conversation detection** to stay on top of what's going on in your open-source community. [cloud only]
-- **[Eagle Eye](https://www.getsphere.dev/eagle-eye)**: Monitor dev-focused community platforms to find relevant content to engage with, helping you to gain developers’ mindshare and grow your community organically [cloud only]
 
 ## Getting started
 
@@ -92,3 +91,41 @@ We currently support all our integrations for self-hosting. For each one of them
 
 ```shell
 git clone git@github.com:SphereDev/Sphere.git
+```
+
+2. Run the start script
+
+```shell
+cd scripts
+./cli start
+```
+
+3. For hot reloading, you can run
+
+``` shell
+cd scripts
+./cli clean-start-dev
+```
+
+4. This app will be available at http://localhost:8081
+
+For more information on development, you can <a href="https://docs.getsphere.dev/docs/docker-compose-single-machine-development-with-docker-images">check our docs</a>.
+
+## Contribution
+There are many ways you can contribute to Sphere! Here are a few options:
+
+## Star this repo
+Create issues every time you feel something is missing or goes wrong
+Upvote issues with 👍 reaction so we know what's the demand for a particular issue to prioritize it within the roadmap
+If you would like to contribute to the development of the project, please refer to our Contributing guide.
+
+All contributions are highly appreciated. 🙏
+
+## License
+Distributed under the Apache 2.0 License. See [LICENSE](./LICENSE) for more information.
+
+Our self-hosted version can be run and deployed by default under the permissive Apache 2.0 license. Preimum features from the previous CrowdDotDev version have been removed to be able to license the entire stack of GetSphere un the Apache 2.0 license.
+
+## Security
+We take security very seriously. If you come across any security vulnerabilities, please disclose them by sending an email to support@liscioapps.com. We appreciate your help in making our platform as secure as possible and are committed to working with you to resolve any issues quickly and efficiently.
+
