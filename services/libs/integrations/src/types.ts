@@ -14,7 +14,26 @@ import {
   IntegrationResultType,
 } from '@crowd/types'
 
-import { IBatchOperationResult } from './integrations/premium/hubspot/api/types'
+export interface ICreateOrganizationsResult {
+  organizationId: string
+  sourceId: string
+  lastSyncedPayload: unknown
+}
+
+export type IUpdateOrganizationsResult = ICreateOrganizationsResult
+
+export interface ICreateMembersResult {
+  memberId: string
+  sourceId: string
+  lastSyncedPayload: unknown
+}
+
+export type IUpdateMembersResult = ICreateMembersResult
+
+export interface IBatchIntegrationOperationResult {
+  created: ICreateMembersResult[] | ICreateOrganizationsResult[]
+  updated: ICreateMembersResult[] | ICreateOrganizationsResult[]
+}
 
 export interface IIntegrationContext {
   onboarding?: boolean
@@ -139,7 +158,7 @@ export type ProcessIntegrationSyncHandler = <T>(
   toUpdate: T[],
   entity: Entity,
   ctx: IIntegrationProcessRemoteSyncContext,
-) => Promise<IBatchOperationResult>
+) => Promise<IBatchIntegrationOperationResult>
 
 export interface IIntegrationDescriptor {
   /**

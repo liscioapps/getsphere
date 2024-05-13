@@ -200,7 +200,6 @@ setImmediate(async () => {
   require('./eventTracking').default(routes)
   require('./customViews').default(routes)
   require('./dashboard').default(routes)
-  require('./premium/enrichment').default(routes)
   // EagleEye is disabled for community edition
   if (API_CONFIG.edition !== Edition.COMMUNITY) {
     require('./eagleEyeContent').default(routes)
