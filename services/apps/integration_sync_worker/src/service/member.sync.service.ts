@@ -10,8 +10,8 @@ import { OpenSearchService } from './opensearch.service'
 import { IntegrationRepository } from '@crowd/data-access-layer/src/old/apps/integration_sync_worker/integration.repo'
 import { FieldTranslatorFactory, OpensearchQueryParser } from '@crowd/opensearch'
 import {
-  IBatchCreateMembersResult,
-  IBatchUpdateMembersResult,
+  ICreateMembersResult,
+  IUpdateMembersResult,
   IIntegrationProcessRemoteSyncContext,
   INTEGRATION_SERVICES,
 } from '@crowd/integrations'
@@ -103,7 +103,7 @@ export class MemberSyncService extends LoggerBase {
       )
 
       if (created.length > 0) {
-        const memberCreated = created[0] as IBatchCreateMembersResult
+        const memberCreated = created[0] as ICreateMembersResult
         await this.memberRepo.setSyncRemoteSourceId(syncRemoteId, memberCreated.sourceId)
         await this.memberRepo.setLastSyncedAtBySyncRemoteId(
           syncRemoteId,
@@ -112,7 +112,7 @@ export class MemberSyncService extends LoggerBase {
       }
 
       if (updated.length > 0) {
-        const memberUpdated = updated[0] as IBatchUpdateMembersResult
+        const memberUpdated = updated[0] as IUpdateMembersResult
         await this.memberRepo.setSyncRemoteSourceId(syncRemoteId, memberUpdated.sourceId)
         await this.memberRepo.setLastSyncedAtBySyncRemoteId(
           syncRemoteId,
@@ -245,7 +245,7 @@ export class MemberSyncService extends LoggerBase {
           context,
         )
 
-        for (const newMember of created as IBatchCreateMembersResult[]) {
+        for (const newMember of created as ICreateMembersResult[]) {
           await this.memberRepo.setIntegrationSourceId(
             newMember.memberId,
             integration.id,
@@ -258,7 +258,7 @@ export class MemberSyncService extends LoggerBase {
           )
         }
 
-        for (const updatedMember of updated as IBatchUpdateMembersResult[]) {
+        for (const updatedMember of updated as IUpdateMembersResult[]) {
           await this.memberRepo.setIntegrationSourceId(
             updatedMember.memberId,
             integration.id,
@@ -464,7 +464,7 @@ export class MemberSyncService extends LoggerBase {
             context,
           )
 
-          for (const newMember of created as IBatchCreateMembersResult[]) {
+          for (const newMember of created as ICreateMembersResult[]) {
             await this.memberRepo.setIntegrationSourceId(
               newMember.memberId,
               integration.id,
@@ -478,7 +478,7 @@ export class MemberSyncService extends LoggerBase {
             )
           }
 
-          for (const updatedMember of updated as IBatchUpdateMembersResult[]) {
+          for (const updatedMember of updated as IUpdateMembersResult[]) {
             await this.memberRepo.setIntegrationSourceId(
               updatedMember.memberId,
               integration.id,
@@ -621,7 +621,7 @@ export class MemberSyncService extends LoggerBase {
           context,
         )
 
-        for (const newMember of created as IBatchCreateMembersResult[]) {
+        for (const newMember of created as ICreateMembersResult[]) {
           await this.memberRepo.setIntegrationSourceId(
             newMember.memberId,
             integration.id,
@@ -634,7 +634,7 @@ export class MemberSyncService extends LoggerBase {
           )
         }
 
-        for (const updatedMember of updated as IBatchUpdateMembersResult[]) {
+        for (const updatedMember of updated as IUpdateMembersResult[]) {
           await this.memberRepo.setIntegrationSourceId(
             updatedMember.memberId,
             integration.id,

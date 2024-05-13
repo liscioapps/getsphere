@@ -5,8 +5,8 @@ import { DbStore } from '@crowd/data-access-layer/src/database'
 import { Logger, LoggerBase } from '@crowd/logging'
 import { IntegrationRepository } from '@crowd/data-access-layer/src/old/apps/integration_sync_worker/integration.repo'
 import {
-  IBatchCreateOrganizationsResult,
-  IBatchUpdateOrganizationsResult,
+  ICreateOrganizationsResult,
+  IUpdateOrganizationsResult,
   IIntegrationProcessRemoteSyncContext,
   INTEGRATION_SERVICES,
 } from '@crowd/integrations'
@@ -86,7 +86,7 @@ export class OrganizationSyncService extends LoggerBase {
       )
 
       if (created.length > 0) {
-        const orgCreated = created[0] as IBatchCreateOrganizationsResult
+        const orgCreated = created[0] as ICreateOrganizationsResult
         await this.organizationRepo.setSyncRemoteSourceId(syncRemoteId, orgCreated.sourceId)
         await this.organizationRepo.setLastSyncedAtBySyncRemoteId(
           syncRemoteId,
@@ -95,7 +95,7 @@ export class OrganizationSyncService extends LoggerBase {
       }
 
       if (updated.length > 0) {
-        const orgUpdated = updated[0] as IBatchUpdateOrganizationsResult
+        const orgUpdated = updated[0] as IUpdateOrganizationsResult
         await this.organizationRepo.setLastSyncedAtBySyncRemoteId(
           syncRemoteId,
           orgUpdated.lastSyncedPayload,
@@ -177,7 +177,7 @@ export class OrganizationSyncService extends LoggerBase {
           context,
         )
 
-        for (const newOrganization of created as IBatchCreateOrganizationsResult[]) {
+        for (const newOrganization of created as ICreateOrganizationsResult[]) {
           await this.organizationRepo.setIntegrationSourceId(
             newOrganization.organizationId,
             integration.id,
@@ -191,7 +191,7 @@ export class OrganizationSyncService extends LoggerBase {
           )
         }
 
-        for (const updatedOrganization of updated as IBatchUpdateOrganizationsResult[]) {
+        for (const updatedOrganization of updated as IUpdateOrganizationsResult[]) {
           await this.organizationRepo.setLastSyncedAt(
             updatedOrganization.organizationId,
             integration.id,
@@ -302,7 +302,7 @@ export class OrganizationSyncService extends LoggerBase {
             context,
           )
 
-          for (const newOrganization of created as IBatchCreateOrganizationsResult[]) {
+          for (const newOrganization of created as ICreateOrganizationsResult[]) {
             await this.organizationRepo.setIntegrationSourceId(
               newOrganization.organizationId,
               integration.id,
@@ -316,7 +316,7 @@ export class OrganizationSyncService extends LoggerBase {
             )
           }
 
-          for (const updatedOrganization of updated as IBatchUpdateOrganizationsResult[]) {
+          for (const updatedOrganization of updated as IUpdateOrganizationsResult[]) {
             await this.organizationRepo.setLastSyncedAt(
               updatedOrganization.organizationId,
               integration.id,

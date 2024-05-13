@@ -16,7 +16,6 @@ import organization from '@/modules/organization/organization-module';
 import task from '@/modules/task/task-module';
 import quickstart from '@/modules/quickstart/quickstart-module';
 
-import eagleEye from '@/premium/eagle-eye/eagle-eye-module';
 import user from '@/modules/user/user-module';
 import config from '@/config';
 
@@ -41,9 +40,5 @@ const modules: Record<string, any> = {
   organization,
 };
 
-// load eagle eye module only if it is enabled
-if (config.isEagleEyeEnabled) {
-  modules.eagleEye = eagleEye;
-}
 
 export default modules;

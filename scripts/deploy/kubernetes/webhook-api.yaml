@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: webhook-api
-          image: liscioapps/sphere-webhook-api:1714528133.0b14e1b4
+          image: liscioapps/sphere-webhook-api:1715622692.c579382f
           workingDir: /usr/crowd/app/services/apps/webhook_api
           command: ['pnpm']
           args: ['run', 'start']
