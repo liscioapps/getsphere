@@ -34,7 +34,7 @@ process.on('SIGTERM', async () => {
 })
 
 const receive = async (queue: string): Promise<SqsMessage | undefined> => {
-  serviceLogger.info(`Recieving from ${queue}`);
+  serviceLogger.info(`Recieving from ${queue}`)
   const params: SqsReceiveMessageRequest = {
     QueueUrl: queue,
   }

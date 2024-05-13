@@ -20,7 +20,7 @@ function init() {
     }
   }
 
-  const hostname = process.env['KUBE_HOST_IP'] || 'datadog_agent'
+  const hostname = process.env['KUBE_HOST_IP'] || 'datadog-agent'
   logger.info('datadog enabled on', hostname)
   return ddTrace.init({
     hostname,
