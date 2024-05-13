@@ -2,18 +2,14 @@
 import {
   CsvExportMessage,
   NodeMicroserviceMessage,
-  BulkEnrichMessage,
   IntegrationDataCheckerMessage,
-  OrganizationBulkEnrichMessage,
 } from './messageTypes'
 import { csvExportWorker } from './csv-export/csvExportWorker'
 import { processStripeWebhook } from '../../integrations/workers/stripeWebhookWorker'
 import { processSendgridWebhook } from '../../integrations/workers/sendgridWebhookWorker'
-import { bulkEnrichmentWorker } from './bulk-enrichment/bulkEnrichmentWorker'
 import { integrationDataCheckerWorker } from './integration-data-checker/integrationDataCheckerWorker'
 import { refreshSampleDataWorker } from './integration-data-checker/refreshSampleDataWorker'
 import { mergeSuggestionsWorker } from './merge-suggestions/mergeSuggestionsWorker'
-import { BulkorganizationEnrichmentWorker } from './bulk-enrichment/bulkOrganizationEnrichmentWorker'
 
 /**
  * Worker factory for spawning different microservices
@@ -51,22 +47,6 @@ async function workerFactory(event: NodeMicroserviceMessage): Promise<any> {
         csvExportMessage.segmentIds,
         csvExportMessage.criteria,
       )
-    case 'bulk-enrich':
-      const bulkEnrichMessage = event as BulkEnrichMessage
-      return bulkEnrichmentWorker(
-        bulkEnrichMessage.tenant,
-        bulkEnrichMessage.memberIds,
-        bulkEnrichMessage.segmentIds,
-        bulkEnrichMessage.notifyFrontend,
-        bulkEnrichMessage.skipCredits,
-      )
-    case 'enrich-organizations': {
-      const bulkEnrichMessage = event as OrganizationBulkEnrichMessage
-      return BulkorganizationEnrichmentWorker(
-        bulkEnrichMessage.tenantId,
-        bulkEnrichMessage.maxEnrichLimit,
-      )
-    }
 
     default:
       throw new Error(`Invalid microservice ${service}`)
