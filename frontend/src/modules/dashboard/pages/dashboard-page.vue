@@ -103,7 +103,7 @@ const handleScroll = (event) => {
 };
 
 onMounted(() => {
-  window.analytics.page('Dashboard');
+  window.analytics?.page('Dashboard');
 
   if (!cubejsApi.value) {
     getCubeToken();

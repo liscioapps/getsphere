@@ -102,7 +102,7 @@ const onDrawerUpdatePeriod = (updatedPeriod) => {
 };
 
 const handleDrawerOpen = () => {
-  window.analytics.track('Open report drawer', {
+  window.analytics?.track('Open report drawer', {
     template: ACTIVITIES_REPORT.nameAsId,
     widget: ACTIVITIES_LEADERBOARD_WIDGET.name,
     period: drawerSelectedPeriod.value,

@@ -181,7 +181,7 @@ const displayCalDialog = () => {
 
 const handleOnCtaClick = ({ key, ctaAction }) => {
   // Send an event with plan request
-  window.analytics.track('Change Plan Request', {
+  window.analytics?.track('Change Plan Request', {
     tenantId: currentTenant.value.id,
     tenantName: currentTenant.value.name,
     requestedPlan: key,

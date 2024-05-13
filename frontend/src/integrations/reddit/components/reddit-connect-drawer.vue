@@ -232,11 +232,11 @@ const connect = async () => {
 
 watch(isVisible, (newValue, oldValue) => {
   if (newValue) {
-    window.analytics.track('Reddit: connect drawer', {
+    window.analytics?.track('Reddit: connect drawer', {
       action: 'open',
     });
   } else if (newValue === false && oldValue) {
-    window.analytics.track('Reddit: connect drawer', {
+    window.analytics?.track('Reddit: connect drawer', {
       action: 'close',
     });
   }

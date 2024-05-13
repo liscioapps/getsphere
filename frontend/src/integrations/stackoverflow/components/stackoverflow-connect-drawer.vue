@@ -394,14 +394,14 @@ const connect = async () => {
 
 watch(isVisible, (newValue, oldValue) => {
   if (newValue) {
-    window.analytics.track(
+    window.analytics?.track(
       'Stack Ooverflow: connect drawer',
       {
         action: 'open',
       },
     );
   } else if (newValue === false && oldValue) {
-    window.analytics.track(
+    window.analytics?.track(
       'Stack Overflow: connect drawer',
       {
         action: 'close',

@@ -62,7 +62,7 @@ const inviteColleagues: OnboardStepConfig = {
       }))
       // Refresh currently stored tenant to new payload
       .then(() => {
-        window.analytics.track('Onboarding completed', {
+        window.analytics?.track('Onboarding completed', {
           tenantName: currentTenant.name,
           connectedPlatforms: activeIntegrations?.map((i) => i.name),
           invitedColleagues: users.readonly.emails.length + users.admin.emails.length,

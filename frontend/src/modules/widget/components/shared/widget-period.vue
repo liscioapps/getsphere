@@ -117,7 +117,7 @@ const getPeriodClass = (value) => (props.period.value === value
 
 const setPeriod = (period) => {
   if (props.module !== 'dashboard') {
-    window.analytics.track('Filter widget', {
+    window.analytics?.track('Filter widget', {
       period,
       template: props.template,
       widget: props.widget,

@@ -1056,7 +1056,7 @@ const onTableMouseLeft = () => {
 };
 
 const trackEmailClick = () => {
-  window.analytics.track('Click Member Contact', {
+  window.analytics?.track('Click Member Contact', {
     channel: 'Email',
   });
 };

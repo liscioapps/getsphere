@@ -291,7 +291,7 @@ export default {
       this.platform = initialPlatformValue;
     },
     onTrackFilters() {
-      window.analytics.track('Filter template report', {
+      window.analytics?.track('Filter template report', {
         template: this.currentTemplate.nameAsId,
         public: true,
         platforms: this.platform.value.map((p) => p.value),

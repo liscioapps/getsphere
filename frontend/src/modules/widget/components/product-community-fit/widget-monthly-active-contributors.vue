@@ -271,7 +271,7 @@ const getActiveMembers = async ({ pagination }) => {
 // Open drawer and set drawer title,
 // and detailed date
 const onViewMoreClick = (date) => {
-  window.analytics.track('Open report drawer', {
+  window.analytics?.track('Open report drawer', {
     template: PRODUCT_COMMUNITY_FIT_REPORT.nameAsId,
     widget: MONTHLY_ACTIVE_CONTRIBUTORS_WIDGET.name,
     date,

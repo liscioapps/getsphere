@@ -43,7 +43,7 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 
 const onCtaClick = () => {
-  window.analytics.track('Upgrade Plan Contact', {
+  window.analytics?.track('Upgrade Plan Contact', {
     route: route.path,
   });
 };

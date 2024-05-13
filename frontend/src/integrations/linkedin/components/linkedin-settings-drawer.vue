@@ -176,11 +176,11 @@ const connect = async () => {
 
 watch(isVisible, (newValue, oldValue) => {
   if (newValue) {
-    window.analytics.track('LinkedIn: settings drawer', {
+    window.analytics?.track('LinkedIn: settings drawer', {
       action: 'open',
     });
   } else if (newValue === false && oldValue) {
-    window.analytics.track('LinkedIn: settings drawer', {
+    window.analytics?.track('LinkedIn: settings drawer', {
       action: 'close',
     });
   }

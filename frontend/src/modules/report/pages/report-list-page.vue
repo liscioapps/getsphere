@@ -137,7 +137,7 @@ export default {
   },
 
   async mounted() {
-    window.analytics.page('Reports');
+    window.analytics?.page('Reports');
   },
 
   methods: {

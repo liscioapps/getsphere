@@ -195,7 +195,7 @@ const activeIntegrations = computed(() => CrowdIntegrations.mappedEnabledConfigs
 const fetchIntegrations = () => store.dispatch('integration/doFetch');
 
 onMounted(async () => {
-  window.analytics.page('Dashboard');
+  window.analytics?.page('Dashboard');
 
   await fetchIntegrations();
 

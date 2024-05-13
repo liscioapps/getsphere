@@ -192,7 +192,7 @@ const getDetailedActiveMembers = ({
 });
 
 const onRowClick = () => {
-  window.analytics.track('Click table widget row', {
+  window.analytics?.track('Click table widget row', {
     template: MEMBERS_REPORT.nameAsId,
     widget: ACTIVE_LEADERBOARD_MEMBERS_WIDGET.name,
   });
@@ -200,7 +200,7 @@ const onRowClick = () => {
 
 // Open drawer and set title
 const handleDrawerOpen = async () => {
-  window.analytics.track('Open report drawer', {
+  window.analytics?.track('Open report drawer', {
     template: MEMBERS_REPORT.nameAsId,
     widget: ACTIVE_LEADERBOARD_MEMBERS_WIDGET.name,
     period: selectedPeriod.value,

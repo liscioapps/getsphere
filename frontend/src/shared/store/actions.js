@@ -298,7 +298,7 @@ export default (moduleName, moduleService = null) => {
         const translatedModuleName = i18n(
           `entities.${moduleName}.menu`,
         );
-        window.analytics.track(
+        window.analytics?.track(
           `${translatedModuleName} View Changed`,
           {
 
@@ -335,7 +335,7 @@ export default (moduleName, moduleService = null) => {
       const translatedModuleName = i18n(
         `entities.${moduleName}.menu`,
       );
-      window.analytics.track(
+      window.analytics?.track(
         `${translatedModuleName} Filter Added`,
         {
 
@@ -377,7 +377,7 @@ export default (moduleName, moduleService = null) => {
       const translatedModuleName = i18n(
         `entities.${moduleName}.menu`,
       );
-      window.analytics.track(
+      window.analytics?.track(
         `${translatedModuleName} Filter Updated`,
         {
 

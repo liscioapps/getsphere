@@ -183,7 +183,7 @@ const getTotalMembers = async ({ pagination }) => {
 // Open drawer and set drawer title,
 // and detailed date
 const onViewMoreClick = (date) => {
-  window.analytics.track('Open report drawer', {
+  window.analytics?.track('Open report drawer', {
     template: MEMBERS_REPORT.nameAsId,
     widget: 'Total contacts',
     date,

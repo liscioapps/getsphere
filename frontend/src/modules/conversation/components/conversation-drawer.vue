@@ -89,7 +89,7 @@ export default {
     isExpanded: {
       handler(newValue) {
         if (newValue) {
-          window.analytics.track(
+          window.analytics?.track(
             'Conversation Drawer Opened',
           );
         }
