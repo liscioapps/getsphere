@@ -13,21 +13,16 @@ export const resourcesLinks: ResourceLink[] = [
   {
     text: 'Documentation',
     icon: 'ri-book-open-line',
-    url: 'https://docs.crowd.dev',
-  },
-  {
-    text: 'API Reference',
-    icon: 'ri-braces-line',
-    url: 'https://docs.crowd.dev/reference/readme',
+    url: 'https://docs.getsphere.dev',
   },
   {
     text: 'Changelog',
     icon: 'ri-megaphone-line',
-    url: 'https://changelog.crowd.dev',
+    url: 'https://github.com/liscioapps/getsphere',
   },
   {
     text: 'Discord community',
     icon: 'ri-discord-fill',
-    url: 'https://crowd.dev/discord',
+    url: 'https://getsphere.dev/discord',
   },
 ];
