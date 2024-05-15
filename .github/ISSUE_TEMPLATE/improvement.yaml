@@ -6,21 +6,6 @@ body:
     attributes:
       value: |
         Thanks for taking the time to suggest an improvement!
-  - type: dropdown
-    id: crowd-edition
-    attributes:
-      label: crowd.dev edition
-      description: Which crowd.dev edition are you reporting on?
-      options:
-        - Community (self hosted)
-        - Cloud (hosted)
-    validations:
-      required: true
-  - type: input
-    id: community-version
-    attributes:
-      label: Version
-      description: (community edition only) which version you are reporting on?
   - type: input
     id: link
     attributes:
